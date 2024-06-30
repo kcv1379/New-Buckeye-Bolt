@@ -46,9 +46,10 @@ FOODBOT_LEFT = pygame.image.load(os.path.join('assets','foodbot.png'))
 #ENEMY_4 = pygame.image.load(os.path.join('assets','enemy4.png'))
 ENEMY_DOOR = pygame.image.load(os.path.join('assets','enemydoor.png'))
 
-# colors
+# colors and font
 GRAY = (167, 177, 183)
 SCARLET = (187, 0, 0)
+font = pygame.font.Font(None, 32)
 
 # display game name at top of window
 pygame.display.set_caption("Buckeye Bolt")
@@ -62,6 +63,11 @@ flicker = False
 counter = 0
 turns = [False, False, False, False]   
 score = 0 
+powerup = False
+powerup_count = 0
+ghost_eaten = [False, False, False, False]
+start_count = 0
+start_game = False
 
 # display window with main aspects
 def window_display():
@@ -90,19 +96,23 @@ def window_display():
             elif map[i][j] == 0:
                 WINDOW.blit(GRAY_SQUARE,(j * 32, i * 32))
 
-
-#change foodbot direction facing based on movement
+# change foodbot direction facing based on movement
 # 0 = left, 1 = right, 2 = up, 3 = down
 def foodbot_display():
     if direction == 0:
-        WINDOW.blit(FOODBOT_LEFT,(foodbot_x,foodbot_y))
+        WINDOW.blit(FOODBOT_LEFT,(foodbot_x, (foodbot_y - 2)))
     elif direction == 1:
-        WINDOW.blit(pygame.transform.flip(FOODBOT_LEFT,True, False), (foodbot_x,foodbot_y))
+        WINDOW.blit(pygame.transform.flip(FOODBOT_LEFT,True, False), (foodbot_x, (foodbot_y - 2)))
     elif direction == 2:
         WINDOW.blit(pygame.transform.rotate(FOODBOT_LEFT, 270), (foodbot_x,foodbot_y))
     elif direction == 3:
-        WINDOW.blit(pygame.transform.rotate(FOODBOT_LEFT, 90), (foodbot_x,foodbot_y))
+        WINDOW.blit(pygame.transform.rotate(FOODBOT_LEFT, 90), ((foodbot_x - 2),foodbot_y))
     
+# miscellaneous stuff to be put on window 
+def misc_display():
+    score_text = font.render(f'SCORE: {score}', True, 'black')
+    WINDOW.blit(score_text, (20, 660))
+        
 # checking which directions foodbot is allowed to move based on position
 def position_check(x,y):
     # 0 = left, 1 = right, 2 = up, 3 = down
@@ -116,40 +126,44 @@ def position_check(x,y):
 
     if round(center_x / 32) < 19:
        # down
-       if map[round((center_y + 18) / 32)][round((center_x + 0) / 32)] == 0 and 0 <= center_x % 32 <= 5:
+       if map[round((center_y + 18) / 32)][round((center_x + 0) / 32)] == 0 and 0 <= center_x % 32 <= 8:
            turns[3] = True
-       elif map[round((center_y + 18) / 32)][round((center_x + 0) / 32)] == 2 and 0 <= center_x % 32 <= 5:
+       elif map[round((center_y + 18) / 32)][round((center_x + 0) / 32)] == 2 and 0 <= center_x % 32 <= 8:
            turns[3] = True
-       elif map[round((center_y + 18) / 32)][round((center_x + 0) / 32)] == 3 and 0 <= center_x % 32 <= 5:
+       elif map[round((center_y + 18) / 32)][round((center_x + 0) / 32)] == 3 and 0 <= center_x % 32 <= 8:
            turns[3] = True
 
       # up
-       if map[round((center_y - 18) / 32)][round((center_x - 0) / 32)] == 0 and 0 <= center_x % 32 <= 5:
+       if map[round((center_y - 18) / 32)][round((center_x - 0) / 32)] == 0 and 0 <= center_x % 32 <= 8:
            turns[2] = True
-       elif map[round((center_y - 18) / 32)][round((center_x - 0) / 32)] == 2 and 0 <= center_x % 32 <= 5:
+       elif map[round((center_y - 18) / 32)][round((center_x - 0) / 32)] == 2 and 0 <= center_x % 32 <= 8:
            turns[2] = True
-       elif map[round((center_y - 18) / 32)][round((center_x - 0) / 32)] == 3 and 0 <= center_x % 32 <= 5:
+       elif map[round((center_y - 18) / 32)][round((center_x - 0) / 32)] == 3 and 0 <= center_x % 32 <= 8:
            turns[2] = True
 
        # right
-       if map[round((center_y + 0) / 32)][round((center_x + 18) / 32)] == 0 and 0 <= center_y % 32 <= 5:
+       if map[round((center_y + 0) / 32)][round((center_x + 16) / 32)] == 0 and 0 <= center_y % 32 <= 8:
            turns[1] = True
-       elif map[round((center_y + 0) / 32)][round((center_x + 18) / 32)] == 2 and 0 <= center_y % 32 <= 5:
+       elif map[round((center_y + 0) / 32)][round((center_x + 16) / 32)] == 2 and 0 <= center_y % 32 <= 8:
           turns[1] = True
-       elif map[round((center_y + 0) / 32)][round((center_x + 18) / 32)] == 3 and 0 <= center_y % 32 <= 5:
+       elif map[round((center_y + 0) / 32)][round((center_x + 16) / 32)] == 3 and 0 <= center_y % 32 <= 8:
            turns[1] = True
 
        # left 
-       if map[round((center_y - 0) / 32)][round((center_x - 18) / 32)] == 0 and 0 <= center_y % 32 <= 5:
+       if map[round((center_y - 0) / 32)][round((center_x - 18) / 32)] == 0 and 0 <= center_y % 32 <= 8:
            turns[0] = True
-       elif map[round((center_y - 0) / 32)][round((center_x - 18) / 32)] == 2 and 0 <= center_y % 32 <= 5:
+       elif map[round((center_y - 0) / 32)][round((center_x - 18) / 32)] == 2 and 0 <= center_y % 32 <= 8:
            turns[0] = True
-       elif map[round((center_y - 0) / 32)][round((center_x - 18) / 32)] == 3 and 0 <= center_y % 32 <= 5:
+       elif map[round((center_y - 0) / 32)][round((center_x - 18) / 32)] == 3 and 0 <= center_y % 32 <= 8:
            turns[0] = True
     
     else: 
         turns[0] = True
         turns[1] = True
+
+    # ADD RANGE OF X OR Y VALUES AND CHANGE OTHER VALUE DEPENING ON IF USER WANTS TO TURN
+    # EX. IF X VAL IS IN A CERTAIN RANGE AND USER WANTS TO TURN DOWN, MOVE FOODBOT DOWN AND ADJUST X VAL TO EXACT  MIDPOINT
+    
     return turns
 
 # move foodbot based on where its at and if its able to turn
@@ -167,17 +181,19 @@ def move_foodbot(foodbot_x,foodbot_y,turns):
         foodbot_y += 2
     return foodbot_x,foodbot_y
 
-# change score based on what's eaten
-def score_change(x, y, score):
-    if map[y // 32][x // 32] == 2:
-        map[y // 32][x // 32] = 0
-        score += 10
-    if map[y // 32][x // 32] == 3:
-        map[y // 32][x // 32] = 0
-        score += 50
-    
-    score += 10
-    return score
+# change score based on what's eaten and activate powerup abilities if big buckeye eaten
+def score_change(score, powerup, powerup_count, ghost_eaten):
+    if 0 < foodbot_x < 608:
+        if map[foodbot_y // 32][foodbot_x // 32] == 2:
+           map[foodbot_y // 32][foodbot_x // 32] = 0
+           score += 10
+        if map[foodbot_y // 32][foodbot_x // 32] == 3:
+           map[foodbot_y // 32][foodbot_x // 32] = 0
+           score += 50
+           powerup = True
+           powerup_count = 0
+           ghost_eaten = [False, False, False, False]
+    return score, powerup, powerup_count, ghost_eaten
     
 FPS = 60
 
@@ -193,12 +209,38 @@ while run:
     else:
         counter = 0
         flicker = False
-    
+
     window_display()
+
+    # if powerup activated for less than 10 seconds
+    if powerup and powerup_count < 600:
+        powerup_count += 1
+    elif powerup and powerup_count >= 600:
+        powerup = False
+        powerup_count = 0
+        ghost_eaten = [False, False, False, False]
+
+    if start_count < 90:
+        start_game = False
+        start_count += 1
+        ready_text = font.render(f'READY!', True, 'black')
+        WINDOW.blit(ready_text, (250, 660))
+    elif start_count < 180:
+        start_game = False
+        start_count += 1
+        ready_text = font.render(f'SET!', True, 'black')
+        WINDOW.blit(ready_text, (270, 660))
+    elif start_count == 180: 
+        start_game = True
+        go_text = font.render(f'GO!', True, 'black')
+        WINDOW.blit(go_text, (270, 660))
+
     foodbot_display()
     turns = position_check(foodbot_x,foodbot_y)
-    foodbot_x,foodbot_y = move_foodbot(foodbot_x,foodbot_y,turns)
-    score = score_change(foodbot_x,foodbot_y,score)
+    if start_game:
+        foodbot_x,foodbot_y = move_foodbot(foodbot_x,foodbot_y,turns)
+    score, powerup, powerup_count, ghost_eaten = score_change(score, powerup, powerup_count, ghost_eaten)
+    misc_display()
 
     for event in pygame.event.get():
         # quit game if user exits window
@@ -236,10 +278,10 @@ while run:
             foodbot_x = 600
             direction = 0
 
-        print("x: ")
-        print(foodbot_x)
-        print("y: ")
-        print(foodbot_y)
+        #print("x: ")
+        #print(foodbot_x)
+        #print("y: ")
+        #print(foodbot_y)
 
     pygame.display.update()
         
