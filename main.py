@@ -29,6 +29,11 @@ map = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
        [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
 
+# displaying window that is 640 x 700
+WIDTH = 640
+HEIGHT = 700
+WINDOW = pygame.display.set_mode((WIDTH,HEIGHT))
+
 # game images
 SCARLET_SQUARE = pygame.image.load(os.path.join('assets','scarlet.png'))
 SMALL_BUCKEYE = pygame.image.load(os.path.join('assets','smallbuckeye.png'))
@@ -40,13 +45,9 @@ FOODBOT_LEFT = pygame.image.load(os.path.join('assets','foodbot.png'))
 #ENEMY_4 = pygame.image.load(os.path.join('assets','enemy4.png'))
 ENEMY_DOOR = pygame.image.load(os.path.join('assets','enemydoor.png'))
 
-# displaying window that is 640 x 700
-WIDTH = 640
-HEIGHT = 700
-WINDOW = pygame.display.set_mode((WIDTH,HEIGHT))
-
 # colors
 GRAY = (167, 177, 183)
+SCARLET = (187, 0, 0)
 
 # display game name at top of window
 pygame.display.set_caption("Buckeye Bolt")
@@ -54,14 +55,11 @@ pygame.display.set_caption("Buckeye Bolt")
 # initial game settings
 foodbot_x = 288
 foodbot_y = 320
-center_x = foodbot_x + 16
-center_y = foodbot_y + 16
 direction = 0
 direction_c = 0
 flicker = False
 counter = 0
 turns = [False, False, False, False]   
-foodbot_speed = 2
 
 # display window with main aspects
 def window_display():
@@ -70,7 +68,7 @@ def window_display():
      for i in range(len(map)):
         for j in range(len(map[i])):
             if map[i][j] == 1:
-                WINDOW.blit(SCARLET_SQUARE,(j * 32, i * 32))
+                pygame.draw.rect(WINDOW,SCARLET,pygame.Rect(j * 32, i * 32, 32, 32))
             elif map[i][j] == 2:
                 WINDOW.blit(SMALL_BUCKEYE,(j * 32, i * 32))
             elif map[i][j] == 3 and not flicker:
@@ -103,104 +101,51 @@ def foodbot_display():
     
 
 # checking which directions foodbot is allowed to move based on position
-def position_check(center_x,center_y):
+def position_check(x,y):
     # 0 = left, 1 = right, 2 = up, 3 = down
     # if square ahead of foodbot is red,stop them from moving 
     #32, 15?
     turns = [False, False, False, False]
+    
+    center_x = x 
+    center_y = y 
+
     if center_x // 32 < 19:
-        # if i am moving right and 
-        if direction == 1:
-            if map[center_y // 20][(center_x) // 20] == 0:
-                turns[0] = True  
-            elif map[center_y // 20][(center_x) // 20] == 2:
-                turns[0] = True  
-            elif map[center_y // 20][(center_x) // 20] == 3:
-                turns[0] = True  
-        if direction == 0:
-            if map[center_y // 20][(center_x) // 20] == 0:
-                turns[1] = True  
-            elif map[center_y // 20][(center_x) // 20] == 2:
-                turns[1] = True  
-            elif map[center_y // 20][(center_x) // 20] == 3:
-                turns[1] = True  
-        if direction == 2:
-            if map[(center_y) // 32][center_x // 20] == 0:
-                turns[3] = True  
-            elif map[(center_y) // 32][center_x // 20] == 2:
-                turns[3] = True  
-            elif map[(center_y) // 32][center_x // 20] == 3:
-                turns[3] = True  
-        if direction == 3:
-            if map[(center_y) // 32][center_x // 20] == 0:
-                turns[2] = True  
-            elif map[(center_y) // 32][center_x // 20] == 2:
-                turns[2] = True  
-            elif map[(center_y) // 32][center_x // 20] == 3:
-                turns[2] = True  
-        if direction == 2 or direction == 3:
-            # if the x value is approximately at the midpoint of a square 
-            if 7 <= center_x % 20 <= 13:
-                if map[(center_y) // 32][center_x // 32] == 0:
-                   turns[3] = True  
-                elif map[(center_y) // 32][center_x // 32] == 2:
-                   turns[3] = True  
-                elif map[(center_y) // 32][center_x // 32] == 3:
-                   turns[3] = True  
-                if map[(center_y) // 32][center_x // 32] == 0:
-                   turns[2] = True  
-                elif map[(center_y) // 32][center_x // 32] == 2:
-                   turns[2] = True  
-                elif map[(center_y) // 32][center_x // 32] == 3:
-                   turns[2] = True  
-            if 7 <= center_y % 20 <= 13:
-                if map[(center_y) // 32][(center_x - 32) // 32] == 0:
-                   turns[0] = True  
-                elif map[(center_y) // 32][(center_x - 32) // 32] == 2:
-                   turns[0] = True  
-                elif map[(center_y) // 32][(center_x - 32) // 32] == 3:
-                   turns[0] = True  
-                if map[(center_y) // 32][(center_x + 32) // 32] == 0:
-                   turns[1] = True  
-                elif map[(center_y) // 32][(center_x + 32) // 32] == 2:
-                   turns[1] = True  
-                elif map[(center_y) // 32][(center_x + 32) // 32] == 3:
-                   turns[1] = True  
-        
-        if direction == 0 or direction == 1:
-            # if the x value is approximately at the midpoint of a square 
-            if 7 <= center_x % 20 <= 13:
-                if map[(center_y + 32) // 32][center_x // 32] == 0:
-                   turns[3] = True  
-                elif map[(center_y + 32) // 32][center_x // 32] == 2:
-                   turns[3] = True  
-                elif map[(center_y + 32) // 32][center_x // 32] == 3:
-                   turns[3] = True  
-                if map[(center_y - 32) // 32][center_x // 32] == 0:
-                   turns[2] = True  
-                elif map[(center_y - 32) // 32][center_x // 32] == 2:
-                   turns[2] = True  
-                elif map[(center_y - 32) // 32][center_x // 32] == 3:
-                   turns[2] = True  
-            if 7 <= center_y % 20 <= 13:
-                if map[(center_y) // 32][(center_x - 10) // 32] == 0:
-                   turns[0] = True  
-                elif map[(center_y) // 32][(center_x - 10) // 32] == 2:
-                   turns[0] = True  
-                elif map[(center_y) // 32][(center_x - 10) // 32] == 3:
-                   turns[0] = True  
-                if map[(center_y) // 32][(center_x + 32) // 32] == 0:
-                   turns[1] = True  
-                elif map[(center_y) // 32][(center_x + 32) // 32] == 2:
-                   turns[1] = True  
-                elif map[(center_y) // 32][(center_x + 32) // 32] == 3:
-                   turns[1] = True  
-        
-        
-                
-    else:
-        turns[1] = True
+       # down
+       if map[round((center_y + 18) / 32)][round((center_x + 5) / 32)] == 0 and 0 <= center_x % 32 <= 5:
+           turns[3] = True
+       elif map[round((center_y + 18) / 32)][round((center_x + 5) / 32)] == 2 and 0 <= center_x % 32 <= 5:
+           turns[3] = True
+       elif map[round((center_y + 18) / 32)][round((center_x + 5) / 32)] == 3 and 0 <= center_x % 32 <= 5:
+           turns[3] = True
+
+      # up
+       if map[round((center_y - 18) / 32)][round((center_x - 5) / 32)] == 0 and 0 <= center_x % 32 <= 5:
+           turns[2] = True
+       elif map[round((center_y - 18) / 32)][round((center_x - 5) / 32)] == 2 and 0 <= center_x % 32 <= 5:
+           turns[2] = True
+       elif map[round((center_y - 18) / 32)][round((center_x - 5) / 32)] == 3 and 0 <= center_x % 32 <= 5:
+           turns[2] = True
+
+       # right
+       if map[round((center_y + 5) / 32)][round((center_x + 18) / 32)] == 0 and 0 <= center_y % 32 <= 5:
+           turns[1] = True
+       elif map[round((center_y + 5) / 32)][round((center_x + 18) / 32)] == 2 and 0 <= center_y % 32 <= 5:
+          turns[1] = True
+       elif map[round((center_y + 5) / 32)][round((center_x + 18) / 32)] == 3 and 0 <= center_y % 32 <= 5:
+           turns[1] = True
+
+       # left 
+       if map[round((center_y - 5) / 32)][round((center_x - 16) / 32)] == 0 and 0 <= center_y % 32 <= 5:
+           turns[0] = True
+       elif map[round((center_y - 5) / 32)][round((center_x - 16) / 32)] == 2 and 0 <= center_y % 32 <= 5:
+           turns[0] = True
+       elif map[round((center_y - 5) / 32)][round((center_x - 16) / 32)] == 3 and 0 <= center_y % 32 <= 5:
+           turns[0] = True
+    
+    else: 
         turns[0] = True
+        turns[1] = True
     return turns
 
 def move_foodbot(foodbot_x,foodbot_y,turns):
@@ -208,15 +153,14 @@ def move_foodbot(foodbot_x,foodbot_y,turns):
     # if foodbot is in direction and is allowed to keep moving in that direction, 
     # change position by increasing or decreasing x and y values
     if direction == 0 and turns[0]:
-        foodbot_x -= foodbot_speed
+        foodbot_x -= 2
     elif direction == 1 and turns [1]:
-        foodbot_x += foodbot_speed
+        foodbot_x += 2
     elif direction == 2 and turns [2]:
-        foodbot_y -= foodbot_speed
+        foodbot_y -= 2
     elif direction == 3 and turns [3]:
-        foodbot_y += foodbot_speed
+        foodbot_y += 2
     return foodbot_x,foodbot_y
-
 
 FPS = 60
 
@@ -266,14 +210,21 @@ while run:
             if direction_c == i and turns[i]:
                 direction = i
         
-        if foodbot_x > 672:
-            foodbot_x = -32
-        elif foodbot_x < -32:
-            foodbot_x = 672
+        if (foodbot_x) > 600:
+            foodbot_x = 0
+            direction = 1
 
+        elif (foodbot_x) < 0:
+            foodbot_x = 600
+            direction = 0
 
-        pygame.display.update()
+        print("x: ")
+        print(foodbot_x)
+        print("y: ")
+        print(foodbot_y)
 
+    pygame.display.update()
+        
 
 pygame.quit()
 
