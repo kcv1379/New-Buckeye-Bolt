@@ -114,37 +114,37 @@ def position_check(x,y):
     center_x = x 
     center_y = y 
 
-    if center_x // 32 < 19:
+    if round(center_x / 32) < 19:
        # down
-       if map[round((center_y + 18) / 32)][round((center_x + 5) / 32)] == 0 and 0 <= center_x % 32 <= 5:
+       if map[round((center_y + 18) / 32)][round((center_x + 0) / 32)] == 0 and 0 <= center_x % 32 <= 5:
            turns[3] = True
-       elif map[round((center_y + 18) / 32)][round((center_x + 5) / 32)] == 2 and 0 <= center_x % 32 <= 5:
+       elif map[round((center_y + 18) / 32)][round((center_x + 0) / 32)] == 2 and 0 <= center_x % 32 <= 5:
            turns[3] = True
-       elif map[round((center_y + 18) / 32)][round((center_x + 5) / 32)] == 3 and 0 <= center_x % 32 <= 5:
+       elif map[round((center_y + 18) / 32)][round((center_x + 0) / 32)] == 3 and 0 <= center_x % 32 <= 5:
            turns[3] = True
 
       # up
-       if map[round((center_y - 18) / 32)][round((center_x - 5) / 32)] == 0 and 0 <= center_x % 32 <= 5:
+       if map[round((center_y - 18) / 32)][round((center_x - 0) / 32)] == 0 and 0 <= center_x % 32 <= 5:
            turns[2] = True
-       elif map[round((center_y - 18) / 32)][round((center_x - 5) / 32)] == 2 and 0 <= center_x % 32 <= 5:
+       elif map[round((center_y - 18) / 32)][round((center_x - 0) / 32)] == 2 and 0 <= center_x % 32 <= 5:
            turns[2] = True
-       elif map[round((center_y - 18) / 32)][round((center_x - 5) / 32)] == 3 and 0 <= center_x % 32 <= 5:
+       elif map[round((center_y - 18) / 32)][round((center_x - 0) / 32)] == 3 and 0 <= center_x % 32 <= 5:
            turns[2] = True
 
        # right
-       if map[round((center_y + 5) / 32)][round((center_x + 18) / 32)] == 0 and 0 <= center_y % 32 <= 5:
+       if map[round((center_y + 0) / 32)][round((center_x + 16) / 32)] == 0 and 0 <= center_y % 32 <= 5:
            turns[1] = True
-       elif map[round((center_y + 5) / 32)][round((center_x + 18) / 32)] == 2 and 0 <= center_y % 32 <= 5:
+       elif map[round((center_y + 0) / 32)][round((center_x + 16) / 32)] == 2 and 0 <= center_y % 32 <= 5:
           turns[1] = True
-       elif map[round((center_y + 5) / 32)][round((center_x + 18) / 32)] == 3 and 0 <= center_y % 32 <= 5:
+       elif map[round((center_y + 0) / 32)][round((center_x + 16) / 32)] == 3 and 0 <= center_y % 32 <= 5:
            turns[1] = True
 
        # left 
-       if map[round((center_y - 5) / 32)][round((center_x - 16) / 32)] == 0 and 0 <= center_y % 32 <= 5:
+       if map[round((center_y - 0) / 32)][round((center_x - 16) / 32)] == 0 and 0 <= center_y % 32 <= 5:
            turns[0] = True
-       elif map[round((center_y - 5) / 32)][round((center_x - 16) / 32)] == 2 and 0 <= center_y % 32 <= 5:
+       elif map[round((center_y - 0) / 32)][round((center_x - 16) / 32)] == 2 and 0 <= center_y % 32 <= 5:
            turns[0] = True
-       elif map[round((center_y - 5) / 32)][round((center_x - 16) / 32)] == 3 and 0 <= center_y % 32 <= 5:
+       elif map[round((center_y - 0) / 32)][round((center_x - 16) / 32)] == 3 and 0 <= center_y % 32 <= 5:
            turns[0] = True
     
     else: 
@@ -170,10 +170,10 @@ def move_foodbot(foodbot_x,foodbot_y,turns):
 # change score based on what's eaten
 def score_change(x, y, score):
     if map[y // 32][x // 32] == 2:
-        map[y // 32][x // 32] == 0
+        map[y // 32][x // 32] = 0
         score += 10
     if map[y // 32][x // 32] == 3:
-        map[y // 32][x // 32] == 0
+        map[y // 32][x // 32] = 0
         score += 50
     
     score += 10
