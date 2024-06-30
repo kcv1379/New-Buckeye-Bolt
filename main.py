@@ -40,10 +40,12 @@ SCARLET_SQUARE = pygame.image.load(os.path.join('assets','scarlet.png'))
 SMALL_BUCKEYE = pygame.image.load(os.path.join('assets','smallbuckeye.png'))
 BIG_BUCKEYE = pygame.image.load(os.path.join('assets','bigbuckeye.png'))
 FOODBOT_LEFT = pygame.image.load(os.path.join('assets','foodbot.png'))
-#ENEMY_1 = pygame.image.load(os.path.join('assets','enemy1.png'))
-#ENEMY_2 = pygame.image.load(os.path.join('assets','enemy2.png'))
-#ENEMY_3 = pygame.image.load(os.path.join('assets','enemy3.png'))
-#ENEMY_4 = pygame.image.load(os.path.join('assets','enemy4.png'))
+ENEMY_1 = pygame.image.load(os.path.join('assets','enemy1.png'))
+ENEMY_2 = pygame.image.load(os.path.join('assets','enemy2.png'))
+ENEMY_3 = pygame.image.load(os.path.join('assets','enemy3.png'))
+ENEMY_4 = pygame.image.load(os.path.join('assets','enemy4.png'))
+ENEMY_EYES = pygame.image.load(os.path.join('assets','enemyeyes.png'))
+ENEMY_POWERUP = pygame.image.load(os.path.join('assets','powerupenemy.png'))
 ENEMY_DOOR = pygame.image.load(os.path.join('assets','enemydoor.png'))
 
 # colors and font
@@ -84,14 +86,14 @@ def window_display():
                 WINDOW.blit(BIG_BUCKEYE,(j * 32, i * 32))
             elif map[i][j] == 4:
                 WINDOW.blit(FOODBOT_LEFT,(j * 32, i * 32))
-            #elif map[i][j] == 5:
-                #WINDOW.blit(ENEMY_1,(j * 32, i * 32))
-            #elif map[i][j] == 6:
-                #WINDOW.blit(ENEMY_2,(j * 32, i * 32))
-            #elif map[i][j] == 7:
-                #WINDOW.blit(ENEMY_3,(j * 32, i * 32))
-            #elif map[i][j] == 8:
-                #WINDOW.blit(ENEMY_4,(j * 32, i * 32))
+            elif map[i][j] == 5:
+                WINDOW.blit(ENEMY_1,(j * 32, i * 32))
+            elif map[i][j] == 6:
+                WINDOW.blit(ENEMY_2,(j * 32, i * 32))
+            elif map[i][j] == 7:
+                WINDOW.blit(ENEMY_3,(j * 32, i * 32))
+            elif map[i][j] == 8:
+                WINDOW.blit(ENEMY_4,(j * 32, i * 32))
             elif map[i][j] == 9:
                 WINDOW.blit(ENEMY_DOOR,(j * 32, i * 32))
             elif map[i][j] == 0:
