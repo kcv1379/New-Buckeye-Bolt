@@ -68,6 +68,7 @@ powerup_count = 0
 ghost_eaten = [False, False, False, False]
 start_count = 0
 start_game = False
+lives_left = 3
 
 # display window with main aspects
 def window_display():
@@ -112,6 +113,9 @@ def foodbot_display():
 def misc_display():
     score_text = font.render(f'SCORE: {score}', True, 'black')
     WINDOW.blit(score_text, (20, 660))
+
+    for i in range(lives_left):
+        WINDOW.blit(FOODBOT_LEFT, (470 + (50 * i), 650))
         
 # checking which directions foodbot is allowed to move based on position
 def position_check(x,y):
@@ -224,16 +228,16 @@ while run:
         start_game = False
         start_count += 1
         ready_text = font.render(f'READY!', True, 'black')
-        WINDOW.blit(ready_text, (250, 660))
+        WINDOW.blit(ready_text, (280, 660))
     elif start_count < 180:
         start_game = False
         start_count += 1
         ready_text = font.render(f'SET!', True, 'black')
-        WINDOW.blit(ready_text, (270, 660))
+        WINDOW.blit(ready_text, (300, 660))
     elif start_count == 180: 
         start_game = True
         go_text = font.render(f'GO!', True, 'black')
-        WINDOW.blit(go_text, (270, 660))
+        WINDOW.blit(go_text, (300, 660))
 
     foodbot_display()
     turns = position_check(foodbot_x,foodbot_y)
@@ -283,6 +287,8 @@ while run:
         #print("y: ")
         #print(foodbot_y)
 
+    print(powerup)
+    print(powerup_count)
     pygame.display.update()
         
 
