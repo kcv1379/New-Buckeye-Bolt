@@ -132,19 +132,19 @@ def position_check(x,y):
            turns[2] = True
 
        # right
-       if map[round((center_y + 0) / 32)][round((center_x + 16) / 32)] == 0 and 0 <= center_y % 32 <= 5:
+       if map[round((center_y + 0) / 32)][round((center_x + 18) / 32)] == 0 and 0 <= center_y % 32 <= 5:
            turns[1] = True
-       elif map[round((center_y + 0) / 32)][round((center_x + 16) / 32)] == 2 and 0 <= center_y % 32 <= 5:
+       elif map[round((center_y + 0) / 32)][round((center_x + 18) / 32)] == 2 and 0 <= center_y % 32 <= 5:
           turns[1] = True
-       elif map[round((center_y + 0) / 32)][round((center_x + 16) / 32)] == 3 and 0 <= center_y % 32 <= 5:
+       elif map[round((center_y + 0) / 32)][round((center_x + 18) / 32)] == 3 and 0 <= center_y % 32 <= 5:
            turns[1] = True
 
        # left 
-       if map[round((center_y - 0) / 32)][round((center_x - 16) / 32)] == 0 and 0 <= center_y % 32 <= 5:
+       if map[round((center_y - 0) / 32)][round((center_x - 18) / 32)] == 0 and 0 <= center_y % 32 <= 5:
            turns[0] = True
-       elif map[round((center_y - 0) / 32)][round((center_x - 16) / 32)] == 2 and 0 <= center_y % 32 <= 5:
+       elif map[round((center_y - 0) / 32)][round((center_x - 18) / 32)] == 2 and 0 <= center_y % 32 <= 5:
            turns[0] = True
-       elif map[round((center_y - 0) / 32)][round((center_x - 16) / 32)] == 3 and 0 <= center_y % 32 <= 5:
+       elif map[round((center_y - 0) / 32)][round((center_x - 18) / 32)] == 3 and 0 <= center_y % 32 <= 5:
            turns[0] = True
     
     else: 
