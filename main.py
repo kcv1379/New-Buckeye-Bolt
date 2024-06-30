@@ -35,6 +35,7 @@ HEIGHT = 700
 WINDOW = pygame.display.set_mode((WIDTH,HEIGHT))
 
 # game images
+GRAY_SQUARE = pygame.image.load(os.path.join('assets','gray.png'))
 SCARLET_SQUARE = pygame.image.load(os.path.join('assets','scarlet.png'))
 SMALL_BUCKEYE = pygame.image.load(os.path.join('assets','smallbuckeye.png'))
 BIG_BUCKEYE = pygame.image.load(os.path.join('assets','bigbuckeye.png'))
@@ -60,6 +61,7 @@ direction_c = 0
 flicker = False
 counter = 0
 turns = [False, False, False, False]   
+score = 0 
 
 # display window with main aspects
 def window_display():
@@ -85,6 +87,8 @@ def window_display():
                 #WINDOW.blit(ENEMY_4,(j * 32, i * 32))
             elif map[i][j] == 9:
                 WINDOW.blit(ENEMY_DOOR,(j * 32, i * 32))
+            elif map[i][j] == 0:
+                WINDOW.blit(GRAY_SQUARE,(j * 32, i * 32))
 
 
 #change foodbot direction facing based on movement
@@ -99,7 +103,6 @@ def foodbot_display():
     elif direction == 3:
         WINDOW.blit(pygame.transform.rotate(FOODBOT_LEFT, 90), (foodbot_x,foodbot_y))
     
-
 # checking which directions foodbot is allowed to move based on position
 def position_check(x,y):
     # 0 = left, 1 = right, 2 = up, 3 = down
@@ -107,6 +110,7 @@ def position_check(x,y):
     #32, 15?
     turns = [False, False, False, False]
     
+    # x and y are already centerd, no need to adjust
     center_x = x 
     center_y = y 
 
@@ -148,6 +152,7 @@ def position_check(x,y):
         turns[1] = True
     return turns
 
+# move foodbot based on where its at and if its able to turn
 def move_foodbot(foodbot_x,foodbot_y,turns):
     # 0 = left, 1 = right, 2 = up, 3 = down
     # if foodbot is in direction and is allowed to keep moving in that direction, 
@@ -162,6 +167,18 @@ def move_foodbot(foodbot_x,foodbot_y,turns):
         foodbot_y += 2
     return foodbot_x,foodbot_y
 
+# change score based on what's eaten
+def score_change(x, y, score):
+    if map[y // 32][x // 32] == 2:
+        map[y // 32][x // 32] == 0
+        score += 10
+    if map[y // 32][x // 32] == 3:
+        map[y // 32][x // 32] == 0
+        score += 50
+    
+    score += 10
+    return score
+    
 FPS = 60
 
 clock = pygame.time.Clock()
@@ -181,6 +198,7 @@ while run:
     foodbot_display()
     turns = position_check(foodbot_x,foodbot_y)
     foodbot_x,foodbot_y = move_foodbot(foodbot_x,foodbot_y,turns)
+    score = score_change(foodbot_x,foodbot_y,score)
 
     for event in pygame.event.get():
         # quit game if user exits window
