@@ -4,6 +4,7 @@ import os
 pygame.init()
 
 # need to figure out how to add main function
+# CHANGE ENEMIES TO CARS THAT HIT FOODBOT 
 
 # map of maze
 # 0 = gray square, 1 = red square, 2 = small buckeye, 3 = big buckeye, 
@@ -40,10 +41,10 @@ SCARLET_SQUARE = pygame.image.load(os.path.join('assets','scarlet.png'))
 SMALL_BUCKEYE = pygame.image.load(os.path.join('assets','smallbuckeye.png'))
 BIG_BUCKEYE = pygame.image.load(os.path.join('assets','bigbuckeye.png'))
 FOODBOT_LEFT = pygame.image.load(os.path.join('assets','foodbot.png'))
-ENEMY_1 = pygame.image.load(os.path.join('assets','enemy1.png'))
-ENEMY_2 = pygame.image.load(os.path.join('assets','enemy2.png'))
-ENEMY_3 = pygame.image.load(os.path.join('assets','enemy3.png'))
-ENEMY_4 = pygame.image.load(os.path.join('assets','enemy4.png'))
+ENEMY1_IMAGE = pygame.image.load(os.path.join('assets','enemy1.png'))
+ENEMY2_IMAGE = pygame.image.load(os.path.join('assets','enemy2.png'))
+ENEMY3_IMAGE = pygame.image.load(os.path.join('assets','enemy3.png'))
+ENEMY4_IMAGE = pygame.image.load(os.path.join('assets','enemy4.png'))
 ENEMY_EYES = pygame.image.load(os.path.join('assets','enemyeyes.png'))
 ENEMY_POWERUP = pygame.image.load(os.path.join('assets','powerupenemy.png'))
 ENEMY_DOOR = pygame.image.load(os.path.join('assets','enemydoor.png'))
@@ -67,10 +68,32 @@ turns = [False, False, False, False]
 score = 0 
 powerup = False
 powerup_count = 0
-ghost_eaten = [False, False, False, False]
+enemy_eaten = [False, False, False, False]
 start_count = 0
 start_game = False
 lives_left = 3
+ENEMY_1_x = 416
+ENEMY_1_y = 288
+ENEMY_1_direction = 0
+ENEMY_2_x = 448
+ENEMY_2_y = 288
+ENEMY_2_direction = 0
+ENEMY_3_x = 416
+ENEMY_3_y = 320
+ENEMY_3_direction = 0
+ENEMY_4_x = 448
+ENEMY_4_y = 320
+ENEMY_4_direction = 0
+enemy_targets = [(foodbot_x,foodbot_y), (foodbot_x,foodbot_y), (foodbot_x,foodbot_y), (foodbot_x,foodbot_y)]
+ENEMY_1_eaten = False
+ENEMY_2_eaten = False
+ENEMY_3_eaten = False
+ENEMY_4_eaten = False
+ENEMY_1_box = True
+ENEMY_2_box = True
+ENEMY_3_box = True
+ENEMY_4_box = True
+enemy_speed = 2
 
 # display window with main aspects
 def window_display():
@@ -86,14 +109,14 @@ def window_display():
                 WINDOW.blit(BIG_BUCKEYE,(j * 32, i * 32))
             elif map[i][j] == 4:
                 WINDOW.blit(FOODBOT_LEFT,(j * 32, i * 32))
-            elif map[i][j] == 5:
-                WINDOW.blit(ENEMY_1,(j * 32, i * 32))
-            elif map[i][j] == 6:
-                WINDOW.blit(ENEMY_2,(j * 32, i * 32))
-            elif map[i][j] == 7:
-                WINDOW.blit(ENEMY_3,(j * 32, i * 32))
-            elif map[i][j] == 8:
-                WINDOW.blit(ENEMY_4,(j * 32, i * 32))
+            #elif map[i][j] == 5:
+                #WINDOW.blit(ENEMY_1,(j * 32, i * 32))
+            #elif map[i][j] == 6:
+                #WINDOW.blit(ENEMY_2,(j * 32, i * 32))
+            #elif map[i][j] == 7:
+                #WINDOW.blit(ENEMY_3,(j * 32, i * 32))
+            #elif map[i][j] == 8:
+                #WINDOW.blit(ENEMY_4,(j * 32, i * 32))
             elif map[i][j] == 9:
                 WINDOW.blit(ENEMY_DOOR,(j * 32, i * 32))
             elif map[i][j] == 0:
@@ -120,15 +143,15 @@ def misc_display():
         WINDOW.blit(FOODBOT_LEFT, (470 + (50 * i), 650))
         
 # checking which directions foodbot is allowed to move based on position
-def position_check(x,y):
+def position_check():
     # 0 = left, 1 = right, 2 = up, 3 = down
     # if square ahead of foodbot is red,stop them from moving 
     #32, 15?
     turns = [False, False, False, False]
     
     # x and y are already centerd, no need to adjust
-    center_x = x 
-    center_y = y 
+    center_x = foodbot_x 
+    center_y = foodbot_y
 
     if round(center_x / 32) < 19:
        # down
@@ -167,9 +190,6 @@ def position_check(x,y):
         turns[0] = True
         turns[1] = True
 
-    # ADD RANGE OF X OR Y VALUES AND CHANGE OTHER VALUE DEPENING ON IF USER WANTS TO TURN
-    # EX. IF X VAL IS IN A CERTAIN RANGE AND USER WANTS TO TURN DOWN, MOVE FOODBOT DOWN AND ADJUST X VAL TO EXACT  MIDPOINT
-    
     return turns
 
 # move foodbot based on where its at and if its able to turn
@@ -188,7 +208,7 @@ def move_foodbot(foodbot_x,foodbot_y,turns):
     return foodbot_x,foodbot_y
 
 # change score based on what's eaten and activate powerup abilities if big buckeye eaten
-def score_change(score, powerup, powerup_count, ghost_eaten):
+def score_change(score, powerup, powerup_count, enemy_eaten):
     if 0 < foodbot_x < 608:
         if map[foodbot_y // 32][foodbot_x // 32] == 2:
            map[foodbot_y // 32][foodbot_x // 32] = 0
@@ -198,9 +218,107 @@ def score_change(score, powerup, powerup_count, ghost_eaten):
            score += 50
            powerup = True
            powerup_count = 0
-           ghost_eaten = [False, False, False, False]
-    return score, powerup, powerup_count, ghost_eaten
+           enemy_eaten = [False, False, False, False]
+    return score, powerup, powerup_count, enemy_eaten
     
+class Enemies:
+    def __init__(self, x, y, target, speed, image, enemy_direction, dead, box, id):
+       self.x_coord = x
+       self.y_coord = y
+       self.target = target
+       self.speed = speed
+       self.image = image
+       self.enemy_direction = enemy_direction
+       self.dead = dead
+       self.in_box = box 
+       self.id = id 
+       self.turns, self.in_box = self.collision_check()
+       self.rect = self.draw()
+
+    def draw(self): 
+        if (not powerup and not self.dead) or (enemy_eaten[self.id] and powerup and not self.dead):
+            WINDOW.blit(self.image, (self.x_coord, self.y_coord))
+        elif (powerup and not self.dead and not enemy_eaten[self.id]):
+            WINDOW.blit(ENEMY_POWERUP, (self.x_coord, self.y_coord))
+        else:
+            WINDOW.blit(ENEMY_EYES, (self.x_coord, self.y_coord))
+        enemy_rect = pygame.rect.Rect((self.x_coord, self.y_coord), (32, 32))
+        return enemy_rect
+    
+    def collision_check(self):
+        self.turns = [False, False, False, False]
+    
+        if round(self.x_coord / 32) < 19:
+          # down
+          if (map[round((self.y_coord + 18) / 32)][round((self.x_coord + 0) / 32)] == 0) \
+            or ((map[round((self.y_coord + 18) / 32)][round((self.x_coord + 0) / 32)] == 9) and (self.in_box or self.dead)) \
+            and 0 <= self.x_coord % 32 <= 8:
+              self.turns[3] = True
+          elif (map[round((self.y_coord + 18) / 32)][round((self.x_coord + 0) / 32)] == 2) \
+          or ((map[round((self.y_coord + 18) / 32)][round((self.x_coord + 0) / 32)] == 9) and (self.in_box or self.dead)) \
+            and 0 <= self.x_coord % 32 <= 8:
+              self.turns[3] = True
+          elif (map[round((self.y_coord + 18) / 32)][round((self.x_coord + 0) / 32)] == 3) \
+            or ((map[round((self.y_coord + 18) / 32)][round((self.x_coord + 0) / 32)] == 9) and (self.in_box or self.dead)) \
+            and 0 <= self.x_coord % 32 <= 8:
+              self.turns[3] = True
+
+         # up
+          if (map[round((self.y_coord - 18) / 32)][round((self.x_coord - 0) / 32)] == 0) \
+            or ((map[round((self.y_coord - 18) / 32)][round((self.x_coord - 0) / 32)] == 9) and (self.in_box or self.dead)) \
+            and 0 <= self.x_coord % 32 <= 8:
+              self.turns[2] = True
+          elif (map[round((self.y_coord - 18) / 32)][round((self.x_coord - 0) / 32)] == 2) \
+            or ((map[round((self.y_coord - 18) / 32)][round((self.x_coord - 0) / 32)] == 9) and (self.in_box or self.dead)) \
+            and 0 <= self.x_coord % 32 <= 8:
+              self.turns[2] = True
+          elif (map[round((self.y_coord - 18) / 32)][round((self.x_coord - 0) / 32)] == 3) \
+            or ((map[round((self.y_coord - 18) / 32)][round((self.x_coord - 0) / 32)] == 9) and (self.in_box or self.dead)) \
+            and 0 <= self.x_coord % 32 <= 8:
+              self.turns[2] = True
+
+          # right
+          if (map[round((self.y_coord + 0) / 32)][round((self.x_coord + 16) / 32)] == 0) \
+            or ((map[round((self.y_coord + 0) / 32)][round((self.x_coord + 16) / 32)] == 9) and (self.in_box or self.dead)) \
+            and 0 <= self.y_coord % 32 <= 8:
+              self.turns[1] = True
+          elif (map[round((self.y_coord + 0) / 32)][round((self.x_coord + 16) / 32)] == 2) \
+            or ((map[round((self.y_coord + 0) / 32)][round((self.x_coord + 16) / 32)] == 9) and (self.in_box or self.dead)) \
+            and 0 <= self.y_coord % 32 <= 8:
+             self.turns[1] = True
+          elif (map[round((self.y_coord + 0) / 32)][round((self.x_coord + 16) / 32)] == 3) \
+            or ((map[round((self.y_coord + 0) / 32)][round((self.x_coord + 16) / 32)] == 9) and (self.in_box or self.dead)) \
+            and 0 <= self.y_coord % 32 <= 8:
+              self.turns[1] = True
+
+          # left 
+          if (map[round((self.y_coord - 0) / 32)][round((self.x_coord - 18) / 32)] == 0) \
+            or ((map[round((self.y_coord - 0) / 32)][round((self.x_coord - 18) / 32)] == 9) and (self.in_box or self.dead)) \
+            and 0 <= self.y_coord % 32 <= 8:
+              self.turns[0] = True
+          elif (map[round((self.y_coord - 0) / 32)][round((self.x_coord - 18) / 32)] == 2) \
+          or ((map[round((self.y_coord - 0) / 32)][round((self.x_coord - 18) / 32)] == 9) and (self.in_box or self.dead)) \
+          and 0 <= self.y_coord % 32 <= 8:
+              self.turns[0] = True
+          elif (map[round((self.y_coord - 0) / 32)][round((self.x_coord - 18) / 32)] == 3) \
+            or ((map[round((self.y_coord - 0) / 32)][round((self.x_coord - 18) / 32)] == 9) and (self.in_box or self.dead)) \
+            and 0 <= self.y_coord % 32 <= 8:
+              self.turns[0] = True
+    
+          else: 
+             self.turns[0] = True
+             self.turns[1] = True
+
+          if 416 < self.x_coord < 448 and 256 < self.y_coord < 320:
+              self.in_box = True
+          else:
+              self.in_box = False
+
+        return self.turns, self.in_box
+
+
+
+
 FPS = 60
 
 clock = pygame.time.Clock()
@@ -224,7 +342,7 @@ while run:
     elif powerup and powerup_count >= 600:
         powerup = False
         powerup_count = 0
-        ghost_eaten = [False, False, False, False]
+        enemy_eaten = [False, False, False, False]
 
     if start_count < 90:
         start_game = False
@@ -242,10 +360,16 @@ while run:
         WINDOW.blit(go_text, (300, 660))
 
     foodbot_display()
-    turns = position_check(foodbot_x,foodbot_y)
+
+    ENEMY_1 = Enemies(ENEMY_1_x, ENEMY_1_y, enemy_targets[0], enemy_speed, ENEMY1_IMAGE, ENEMY_1_direction, ENEMY_1_eaten, ENEMY_1_box, 0)
+    ENEMY_2 = Enemies(ENEMY_2_x, ENEMY_2_y, enemy_targets[1], enemy_speed, ENEMY2_IMAGE, ENEMY_2_direction, ENEMY_2_eaten, ENEMY_2_box, 1)
+    ENEMY_3 = Enemies(ENEMY_3_x, ENEMY_3_y, enemy_targets[2], enemy_speed, ENEMY3_IMAGE, ENEMY_3_direction, ENEMY_3_eaten, ENEMY_3_box, 2)
+    ENEMY_4 = Enemies(ENEMY_4_x, ENEMY_4_y, enemy_targets[3], enemy_speed, ENEMY4_IMAGE, ENEMY_4_direction, ENEMY_4_eaten, ENEMY_4_box, 3)
+
+    turns = position_check()
     if start_game:
         foodbot_x,foodbot_y = move_foodbot(foodbot_x,foodbot_y,turns)
-    score, powerup, powerup_count, ghost_eaten = score_change(score, powerup, powerup_count, ghost_eaten)
+    score, powerup, powerup_count, enemy_eaten = score_change(score, powerup, powerup_count, enemy_eaten)
     misc_display()
 
     for event in pygame.event.get():
