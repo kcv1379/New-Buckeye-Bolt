@@ -18,8 +18,8 @@ map = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
        [1, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 1],
        [1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 9, 1, 1, 2, 1, 2, 1],
        [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 0, 0, 1, 2, 1, 2, 1],
-       [1, 2, 1, 2, 1, 2, 1, 1, 1, 2, 1, 2, 1, 5, 6, 1, 2, 1, 2, 1],
-       [0, 2, 1, 2, 1, 2, 1, 1, 1, 0, 1, 2, 1, 7, 8, 1, 2, 1, 2, 0],
+       [1, 2, 1, 2, 1, 2, 1, 1, 1, 2, 1, 2, 1, 0, 0, 1, 2, 1, 2, 1],
+       [0, 2, 1, 2, 1, 2, 1, 1, 1, 0, 1, 2, 1, 0, 0, 1, 2, 1, 2, 0],
        [1, 2, 1, 2, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 2, 1, 2, 1],
        [1, 2, 1, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 1],
        [1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 1, 2, 1],
@@ -78,11 +78,12 @@ ENEMY_1_direction = 0
 ENEMY_2_x = 448
 ENEMY_2_y = 288
 ENEMY_2_direction = 0
+# og: 320 y val
 ENEMY_3_x = 416
-ENEMY_3_y = 320
+ENEMY_3_y = 256
 ENEMY_3_direction = 0
 ENEMY_4_x = 448
-ENEMY_4_y = 320
+ENEMY_4_y = 256
 ENEMY_4_direction = 0
 enemy_targets = [(foodbot_x,foodbot_y), (foodbot_x,foodbot_y), (foodbot_x,foodbot_y), (foodbot_x,foodbot_y)]
 ENEMY_1_eaten = False
@@ -109,14 +110,6 @@ def window_display():
                 WINDOW.blit(BIG_BUCKEYE,(j * 32, i * 32))
             elif map[i][j] == 4:
                 WINDOW.blit(FOODBOT_LEFT,(j * 32, i * 32))
-            #elif map[i][j] == 5:
-                #WINDOW.blit(ENEMY_1,(j * 32, i * 32))
-            #elif map[i][j] == 6:
-                #WINDOW.blit(ENEMY_2,(j * 32, i * 32))
-            #elif map[i][j] == 7:
-                #WINDOW.blit(ENEMY_3,(j * 32, i * 32))
-            #elif map[i][j] == 8:
-                #WINDOW.blit(ENEMY_4,(j * 32, i * 32))
             elif map[i][j] == 9:
                 WINDOW.blit(ENEMY_DOOR,(j * 32, i * 32))
             elif map[i][j] == 0:
