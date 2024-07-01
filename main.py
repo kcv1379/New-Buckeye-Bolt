@@ -316,6 +316,26 @@ class Enemies:
 
         return self.turns, self.in_box
 
+    def move_enemies(self):
+        # 0 = left, 1 = right, 2 = up, 3 = down
+        if self.direction == 1:
+            # if target is to the right and enemy is able to move right, continue moving right
+            if self.target[0] > self.x_coord and self.turns[1]:
+                self.x_coord += self.speed
+            # if unable to move right
+            elif not self.turns[1]:
+                # if target is below enemy and enemy is able to move down, move down
+                if self.target[1] > self.y_coord and self.turns[3]:
+                    self.enemy_direction = 3
+                    self.y_coord += self.speed
+                elif self.target[1] < self.y_coord and self.turns[2]:
+                    self.enemy_direction = 2
+                    self.y_coord -= self.speed
+                elif self.target[0] < self.x_coord and self.turns[0]:
+                    self.enemy_direction = 0
+                    self.x_coord -= self.speed
+
+
 
 
 
@@ -413,8 +433,7 @@ while run:
         #print("y: ")
         #print(foodbot_y)
 
-    print(powerup)
-    print(powerup_count)
+   
     pygame.display.update()
         
 
