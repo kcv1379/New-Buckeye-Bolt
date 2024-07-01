@@ -250,75 +250,75 @@ class Enemies:
     
         if round(self.x_coord / 32) < 19:
           # down
-          if (map[round((self.y_coord + 18) / 32)][round((self.x_coord + 0) / 32)] == 0) \
-            or ((map[round((self.y_coord + 18) / 32)][round((self.x_coord + 0) / 32)] == 9) and (self.in_box or self.dead)) \
+          if ((map[round((self.y_coord + 18) / 32)][round((self.x_coord + 0) / 32)] == 0) \
+            or ((map[round((self.y_coord + 18) / 32)][round((self.x_coord + 0) / 32)] == 9) and (self.in_box or self.dead))) \
             and 0 <= self.x_coord % 32 <= 8:
               self.turns[3] = True
-          elif (map[round((self.y_coord + 18) / 32)][round((self.x_coord + 0) / 32)] == 2) \
-          or ((map[round((self.y_coord + 18) / 32)][round((self.x_coord + 0) / 32)] == 9) and (self.in_box or self.dead)) \
+          elif ((map[round((self.y_coord + 18) / 32)][round((self.x_coord + 0) / 32)] == 2) \
+          or ((map[round((self.y_coord + 18) / 32)][round((self.x_coord + 0) / 32)] == 9) and (self.in_box or self.dead))) \
             and 0 <= self.x_coord % 32 <= 8:
               self.turns[3] = True
-          elif (map[round((self.y_coord + 18) / 32)][round((self.x_coord + 0) / 32)] == 3) \
-            or ((map[round((self.y_coord + 18) / 32)][round((self.x_coord + 0) / 32)] == 9) and (self.in_box or self.dead)) \
+          elif ((map[round((self.y_coord + 18) / 32)][round((self.x_coord + 0) / 32)] == 3) \
+            or ((map[round((self.y_coord + 18) / 32)][round((self.x_coord + 0) / 32)] == 9) and (self.in_box or self.dead))) \
             and 0 <= self.x_coord % 32 <= 8:
               self.turns[3] = True
 
          # up
-          if (map[round((self.y_coord - 18) / 32)][round((self.x_coord - 0) / 32)] == 0) \
-            or ((map[round((self.y_coord - 18) / 32)][round((self.x_coord - 0) / 32)] == 9) and (self.in_box or self.dead)) \
+          if ((map[round((self.y_coord - 18) / 32)][round((self.x_coord - 0) / 32)] == 0) \
+            or ((map[round((self.y_coord - 18) / 32)][round((self.x_coord - 0) / 32)] == 9) and (self.in_box or self.dead))) \
             and 0 <= self.x_coord % 32 <= 8:
               self.turns[2] = True
-          elif (map[round((self.y_coord - 18) / 32)][round((self.x_coord - 0) / 32)] == 2) \
-            or ((map[round((self.y_coord - 18) / 32)][round((self.x_coord - 0) / 32)] == 9) and (self.in_box or self.dead)) \
+          elif ((map[round((self.y_coord - 18) / 32)][round((self.x_coord - 0) / 32)] == 2) \
+            or ((map[round((self.y_coord - 18) / 32)][round((self.x_coord - 0) / 32)] == 9) and (self.in_box or self.dead))) \
             and 0 <= self.x_coord % 32 <= 8:
               self.turns[2] = True
-          elif (map[round((self.y_coord - 18) / 32)][round((self.x_coord - 0) / 32)] == 3) \
-            or ((map[round((self.y_coord - 18) / 32)][round((self.x_coord - 0) / 32)] == 9) and (self.in_box or self.dead)) \
+          elif ((map[round((self.y_coord - 18) / 32)][round((self.x_coord - 0) / 32)] == 3) \
+            or ((map[round((self.y_coord - 18) / 32)][round((self.x_coord - 0) / 32)] == 9) and (self.in_box or self.dead))) \
             and 0 <= self.x_coord % 32 <= 8:
               self.turns[2] = True
 
           # right
-          if (map[round((self.y_coord + 0) / 32)][round((self.x_coord + 16) / 32)] == 0) \
-            or ((map[round((self.y_coord + 0) / 32)][round((self.x_coord + 16) / 32)] == 9) and (self.in_box or self.dead)) \
+          if ((map[round((self.y_coord + 0) / 32)][round((self.x_coord + 16) / 32)] == 0) \
+            or ((map[round((self.y_coord + 0) / 32)][round((self.x_coord + 16) / 32)] == 9) and (self.in_box or self.dead))) \
             and 0 <= self.y_coord % 32 <= 8:
               self.turns[1] = True
-          elif (map[round((self.y_coord + 0) / 32)][round((self.x_coord + 16) / 32)] == 2) \
-            or ((map[round((self.y_coord + 0) / 32)][round((self.x_coord + 16) / 32)] == 9) and (self.in_box or self.dead)) \
+          elif ((map[round((self.y_coord + 0) / 32)][round((self.x_coord + 16) / 32)] == 2) \
+            or ((map[round((self.y_coord + 0) / 32)][round((self.x_coord + 16) / 32)] == 9) and (self.in_box or self.dead))) \
             and 0 <= self.y_coord % 32 <= 8:
              self.turns[1] = True
-          elif (map[round((self.y_coord + 0) / 32)][round((self.x_coord + 16) / 32)] == 3) \
-            or ((map[round((self.y_coord + 0) / 32)][round((self.x_coord + 16) / 32)] == 9) and (self.in_box or self.dead)) \
+          elif ((map[round((self.y_coord + 0) / 32)][round((self.x_coord + 16) / 32)] == 3) \
+            or ((map[round((self.y_coord + 0) / 32)][round((self.x_coord + 16) / 32)] == 9) and (self.in_box or self.dead))) \
             and 0 <= self.y_coord % 32 <= 8:
               self.turns[1] = True
 
           # left 
-          if (map[round((self.y_coord - 0) / 32)][round((self.x_coord - 18) / 32)] == 0) \
-            or ((map[round((self.y_coord - 0) / 32)][round((self.x_coord - 18) / 32)] == 9) and (self.in_box or self.dead)) \
+          if ((map[round((self.y_coord - 0) / 32)][round((self.x_coord - 18) / 32)] == 0) \
+            or ((map[round((self.y_coord - 0) / 32)][round((self.x_coord - 18) / 32)] == 9) and (self.in_box or self.dead))) \
             and 0 <= self.y_coord % 32 <= 8:
               self.turns[0] = True
-          elif (map[round((self.y_coord - 0) / 32)][round((self.x_coord - 18) / 32)] == 2) \
-          or ((map[round((self.y_coord - 0) / 32)][round((self.x_coord - 18) / 32)] == 9) and (self.in_box or self.dead)) \
+          elif ((map[round((self.y_coord - 0) / 32)][round((self.x_coord - 18) / 32)] == 2) \
+          or ((map[round((self.y_coord - 0) / 32)][round((self.x_coord - 18) / 32)] == 9) and (self.in_box or self.dead))) \
           and 0 <= self.y_coord % 32 <= 8:
               self.turns[0] = True
-          elif (map[round((self.y_coord - 0) / 32)][round((self.x_coord - 18) / 32)] == 3) \
-            or ((map[round((self.y_coord - 0) / 32)][round((self.x_coord - 18) / 32)] == 9) and (self.in_box or self.dead)) \
+          elif ((map[round((self.y_coord - 0) / 32)][round((self.x_coord - 18) / 32)] == 3) \
+            or ((map[round((self.y_coord - 0) / 32)][round((self.x_coord - 18) / 32)] == 9) and (self.in_box or self.dead))) \
             and 0 <= self.y_coord % 32 <= 8:
               self.turns[0] = True
     
-          else: 
-             self.turns[0] = True
-             self.turns[1] = True
+        else: 
+           self.turns[0] = True
+           self.turns[1] = True
 
-          if 416 < self.x_coord < 448 and 256 < self.y_coord < 320:
-              self.in_box = True
-          else:
-              self.in_box = False
+        if 416 < self.x_coord < 448 and 256 < self.y_coord < 320:
+           self.in_box = True
+        else:
+           self.in_box = False
 
         return self.turns, self.in_box
 
     def move_enemies(self):
         # 0 = left, 1 = right, 2 = up, 3 = down
-        if self.direction == 1:
+        if self.enemy_direction == 1:
             # if target is to the right and enemy is able to move right, continue moving right
             if self.target[0] > self.x_coord and self.turns[1]:
                 self.x_coord += self.speed
@@ -334,10 +334,189 @@ class Enemies:
                 elif self.target[0] < self.x_coord and self.turns[0]:
                     self.enemy_direction = 0
                     self.x_coord -= self.speed
+                elif self.turns[3]:
+                    self.enemy_direction = 3
+                    self.y_coord += self.speed
+                elif self.turns[2]:
+                    self.enemy_direction = 2
+                    self.y_coord -= self.speed
+                elif self.turns[0]:
+                    self.enemy_direction = 0
+                    self.x_coord -= self.speed
+            elif self.turns[1]:
+                if self.target[1] > self.y_coord and self.turns[3]:
+                    self.enemy_direction = 3
+                    self.y_coord += self.speed
+                if self.target[1] < self.y_coord and self.turns[2]:
+                    self.enemy_direction = 2
+                    self.y_coord -= self.speed
+                else:
+                    self.x_coord += self.speed
+        elif self.enemy_direction == 0:
+            if self.target[1] > self.y_coord and self.turns[3]:
+                self.enemy_direction = 3
+            elif self.target[0] < self.x_coord and self.turns[0]:
+                self.x_coord -= self.speed
+            elif not self.turns[0]:
+                if self.target[1] > self.y_coord and self.turns[3]:
+                    self.enemy_direction = 3
+                    self.y_coord += self.speed
+                elif self.target[1] < self.y_coord and self.turns[2]:
+                    self.enemy_direction = 2
+                    self.y_coord -= self.speed
+                elif self.target[0] > self.x_coord and self.turns[1]:
+                    self.enemy_direction = 1
+                    self.x_coord += self.speed
+                elif self.turns[3]:
+                    self.enemy_direction = 3
+                    self.y_coord += self.speed
+                elif self.turns[2]:
+                    self.enemy_direction = 2
+                    self.y_coord -= self.speed
+                elif self.turns[1]:
+                    self.enemy_direction = 1
+                    self.x_coord += self.speed
+                
+            elif self.turns[0]:
+                if self.target[1] > self.y_coord and self.turns[3]:
+                    self.enemy_direction = 3
+                    self.y_coord += self.speed
+                if self.target[1] < self.y_coord and self.turns[2]:
+                    self.enemy_direction = 2
+                    self.y_coord -= self.speed
+                else:
+                    self.x_coord -= self.speed
+        elif self.enemy_direction == 2:
+            if self.target[0] < self.x_coord and self.turns[0]:
+                self.enemy_direction = 0
+                self.x_coord -= self.speed
+            elif self.target[1] < self.y_coord and self.turns[2]:
+                self.y_coord -= self.speed
+            elif not self.turns[2]:
+                if self.target[0] > self.x_coord and self.turns[1]:
+                    self.enemy_direction = 1
+                    self.x_coord += self.speed
+                elif self.target[0] < self.x_coord and self.turns[0]:
+                    self.enemy_direction = 0
+                    self.x_coord -= self.speed
+                elif self.target[1] > self.y_coord and self.turns[3]:
+                    self.enemy_direction = 3
+                    self.y_coord += self.speed
+                elif self.turns[3]:
+                    self.enemy_direction = 3
+                    self.y_coord += self.speed
+                elif self.turns[0]:
+                    self.enemy_direction = 0
+                    self.x_coord -= self.speed
+                elif self.turns[1]:
+                    self.enemy_direction = 1
+                    self.x_coord += self.speed
+                
+            elif self.turns[2]:
+                if self.target[0] > self.x_coord and self.turns[1]:
+                    self.enemy_direction = 1
+                    self.x_coord += self.speed
+                if self.target[0] < self.x_coord and self.turns[0]:
+                    self.enemy_direction = 0
+                    self.x_coord -= self.speed
+                else:
+                    self.y_coord -= self.speed
+        elif self.enemy_direction == 3:
+            if self.target[1] > self.y_coord and self.turns[3]:
+                self.y_coord += self.speed
+            elif not self.turns[3]:
+                if self.target[0] > self.x_coord and self.turns[1]:
+                   self.enemy_direction = 1
+                   self.x_coord += self.speed
+                elif self.target[0] < self.x_coord and self.turns[0]:
+                   self.enemy_direction = 0
+                   self.x_coord -= self.speed
+                elif self.target[1] < self.y_coord and self.turns[2]:
+                   self.enemy_direction = 2
+                   self.y_coord -= self.speed
+                elif self.turns[2]:
+                    self.enemy_direction = 2
+                    self.y_coord -= self.speed
+                elif self.turns[0]:
+                    self.enemy_direction = 0
+                    self.x_coord -= self.speed
+                elif self.turns[1]:
+                    self.enemy_direction = 1
+                    self.x_coord += self.speed              
+            elif self.turns[3]:
+                if self.target[0] > self.x_coord and self.turns[1]:
+                    self.enemy_direction = 1
+                    self.x_coord += self.speed
+                if self.target[0] < self.x_coord and self.turns[0]:
+                    self.enemy_direction = 0
+                    self.x_coord -= self.speed
+                else:
+                    self.y_coord += self.speed
+        if (self.x_coord) > 600:
+            self.x_coord = 0
+            self.enemy_direction = 1
 
+        elif (self.x_coord) < 0:
+            self.x_coord = 600
+            self.enemy_direction = 0
+        return self.x_coord, self.y_coord, self.enemy_direction
 
+def get_targets(ENEMY_1_x, ENEMY_1_y, ENEMY_2_x, ENEMY_2_y, ENEMY_3_x, ENEMY_3_y, ENEMY_4_x, ENEMY_4_y):
+    if foodbot_x < 320:
+        escape_x = 640
+    else:
+        escape_x = 0
+    if foodbot_y < 320:
+        escape_y = 640
+    else:
+        escape_y = 0
+    return_target = (416,320)
+    if powerup:
+        if not ENEMY_1_eaten:
+            ENEMY_1_TARGET = (escape_x, escape_y)
+        else: 
+            ENEMY_1_TARGET = return_target
+        if not ENEMY_2_eaten:
+            ENEMY_2_TARGET = (escape_x, foodbot_y)
+        else: 
+            ENEMY_2_TARGET = return_target
+        if not ENEMY_1_eaten:
+            ENEMY_3_TARGET = (foodbot_x, escape_y)
+        else: 
+            ENEMY_3_TARGET = return_target
+        if not ENEMY_1_eaten:
+            ENEMY_4_TARGET = (320, 320)
+        else: 
+            ENEMY_4_TARGET = return_target
+    else:
+        if not ENEMY_1_eaten:
+            if 416 < ENEMY_1_x < 448 and 256 < ENEMY_1_y < 320:
+                ENEMY_1_TARGET = (224,416)
+            else: 
+                ENEMY_1_TARGET = (foodbot_x, foodbot_y)
+        else: 
+            ENEMY_1_TARGET = return_target
+        if not ENEMY_2_eaten:
+            if 416 < ENEMY_2_x < 448 and 256 < ENEMY_2_y < 320:
+                ENEMY_2_TARGET = (224,416)
+            else: 
+                ENEMY_2_TARGET = (foodbot_x, foodbot_y)
+        else: 
+            ENEMY_2_TARGET = return_target
+        if not ENEMY_3_eaten:
+            if 416 < ENEMY_3_x < 448 and 256 < ENEMY_3_y < 320:
+                ENEMY_3_TARGET = (224,416)
+            else: ENEMY_3_TARGET = (foodbot_x, foodbot_y)
+        else: 
+            ENEMY_3_TARGET = return_target
+        if not ENEMY_4_eaten:
+            if 416 < ENEMY_4_x < 448 and 256 < ENEMY_4_y < 320:
+                ENEMY_4_TARGET = (224,416)
+            else: ENEMY_4_TARGET = (foodbot_x, foodbot_y)
+        else: 
+            ENEMY_4_TARGET = return_target
 
-
+    return [ENEMY_1_TARGET, ENEMY_2_TARGET, ENEMY_3_TARGET, ENEMY_4_TARGET]
 
 FPS = 60
 
@@ -389,8 +568,13 @@ while run:
     turns = position_check()
     if start_game:
         foodbot_x,foodbot_y = move_foodbot(foodbot_x,foodbot_y,turns)
+        ENEMY_1_x, ENEMY_1_y, ENEMY_1_direction = ENEMY_1.move_enemies()
+        ENEMY_2_x, ENEMY_2_y, ENEMY_2_direction = ENEMY_2.move_enemies()
+        ENEMY_3_x, ENEMY_3_y, ENEMY_3_direction = ENEMY_3.move_enemies()
+        ENEMY_4_x, ENEMY_4_y, ENEMY_4_direction = ENEMY_4.move_enemies()
     score, powerup, powerup_count, enemy_eaten = score_change(score, powerup, powerup_count, enemy_eaten)
     misc_display()
+    targets = get_targets(ENEMY_1_x, ENEMY_1_y, ENEMY_2_x, ENEMY_2_y, ENEMY_3_x, ENEMY_3_y, ENEMY_4_x, ENEMY_4_y)
 
     for event in pygame.event.get():
         # quit game if user exits window
