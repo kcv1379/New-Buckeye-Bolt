@@ -3,9 +3,6 @@ import os
 
 pygame.init()
 
-# need to figure out how to add main function
-# CHANGE ENEMIES TO CARS THAT HIT FOODBOT 
-
 # map of maze
 # 0 = gray square, 1 = red square, 2 = small buckeye, 3 = big buckeye, 
 # 4 = foodbot, 5 = enemy 1, 6 = enemy 2, 7 = enemy 3, 8 = enemy 4 9 = enemy door
@@ -825,3 +822,13 @@ while run:
     pygame.display.update()
 
 pygame.quit()
+
+#################
+
+# FUTURE CHANGES:
+# change enemies to cars that try to hit foodbot
+# optimize code
+# change game aspects to rects or masks to check for collisions easier and better
+# add start and end screen
+# add music 
+# add level system where game resets but enemies move faster
