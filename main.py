@@ -78,7 +78,6 @@ ENEMY_1_direction = 0
 ENEMY_2_x = 448
 ENEMY_2_y = 288
 ENEMY_2_direction = 0
-# og: 320 y val
 ENEMY_3_x = 416
 ENEMY_3_y = 256
 ENEMY_3_direction = 0
@@ -94,7 +93,9 @@ ENEMY_1_box = True
 ENEMY_2_box = True
 ENEMY_3_box = True
 ENEMY_4_box = True
-enemy_speed = 2
+enemy_speed = [2, 2, 2, 2]
+game_over = False
+buckeyes_collected = 0
 
 # display window with main aspects
 def window_display():
@@ -201,37 +202,39 @@ def move_foodbot(foodbot_x,foodbot_y,turns):
     return foodbot_x,foodbot_y
 
 # change score based on what's eaten and activate powerup abilities if big buckeye eaten
-def score_change(score, powerup, powerup_count, enemy_eaten):
+def score_change(score, powerup, powerup_count, enemy_eaten, buckeyes_collected):
     if 0 < foodbot_x < 608:
         if map[foodbot_y // 32][foodbot_x // 32] == 2:
            map[foodbot_y // 32][foodbot_x // 32] = 0
            score += 10
+           buckeyes_collected += 1
         if map[foodbot_y // 32][foodbot_x // 32] == 3:
            map[foodbot_y // 32][foodbot_x // 32] = 0
            score += 50
            powerup = True
            powerup_count = 0
            enemy_eaten = [False, False, False, False]
-    return score, powerup, powerup_count, enemy_eaten
+           buckeyes_collected +=1
+    return score, powerup, powerup_count, enemy_eaten, buckeyes_collected
     
 class Enemies:
-    def __init__(self, x, y, target, speed, image, enemy_direction, dead, box, id):
+    def __init__(self, x, y, target, speed, image, enemy_direction, eaten, box, id):
        self.x_coord = x
        self.y_coord = y
        self.target = target
        self.speed = speed
        self.image = image
        self.enemy_direction = enemy_direction
-       self.dead = dead
+       self.eaten = eaten
        self.in_box = box 
        self.id = id 
        self.turns, self.in_box = self.collision_check()
        self.rect = self.draw()
 
     def draw(self): 
-        if (not powerup and not self.dead) or (enemy_eaten[self.id] and powerup and not self.dead):
+        if (not powerup and not self.eaten) or (enemy_eaten[self.id] and powerup and not self.eaten) or self.in_box:
             WINDOW.blit(self.image, (self.x_coord, self.y_coord))
-        elif (powerup and not self.dead and not enemy_eaten[self.id]):
+        elif (powerup and not self.eaten and not enemy_eaten[self.id]):
             WINDOW.blit(ENEMY_POWERUP, (self.x_coord, self.y_coord))
         else:
             WINDOW.blit(ENEMY_EYES, (self.x_coord, self.y_coord))
@@ -240,72 +243,74 @@ class Enemies:
     
     def collision_check(self):
         self.turns = [False, False, False, False]
+
+        if 415 < self.x_coord < 450 and 220 < self.y_coord < 330:
+           self.in_box = True
+           self.eaten = False
+           enemy_eaten[self.id] = False
+        else:
+           self.in_box = False
     
         if round(self.x_coord / 32) < 19:
           # down
           if ((map[round((self.y_coord + 18) / 32)][round((self.x_coord + 0) / 32)] == 0) \
-            or ((map[round((self.y_coord + 18) / 32)][round((self.x_coord + 0) / 32)] == 9) and (self.in_box or self.dead))) \
+            or ((map[round((self.y_coord + 18) / 32)][round((self.x_coord + 0) / 32)] == 9) and (self.in_box or self.eaten))) \
             and 0 <= self.x_coord % 32 <= 8:
               self.turns[3] = True
           elif ((map[round((self.y_coord + 18) / 32)][round((self.x_coord + 0) / 32)] == 2) \
-          or ((map[round((self.y_coord + 18) / 32)][round((self.x_coord + 0) / 32)] == 9) and (self.in_box or self.dead))) \
+          or ((map[round((self.y_coord + 18) / 32)][round((self.x_coord + 0) / 32)] == 9) and (self.in_box or self.eaten))) \
             and 0 <= self.x_coord % 32 <= 8:
               self.turns[3] = True
           elif ((map[round((self.y_coord + 18) / 32)][round((self.x_coord + 0) / 32)] == 3) \
-            or ((map[round((self.y_coord + 18) / 32)][round((self.x_coord + 0) / 32)] == 9) and (self.in_box or self.dead))) \
+            or ((map[round((self.y_coord + 18) / 32)][round((self.x_coord + 0) / 32)] == 9) and (self.in_box or self.eaten))) \
             and 0 <= self.x_coord % 32 <= 8:
               self.turns[3] = True
 
          # up
           if ((map[round((self.y_coord - 18) / 32)][round((self.x_coord - 0) / 32)] == 0) \
-            or ((map[round((self.y_coord - 18) / 32)][round((self.x_coord - 0) / 32)] == 9) and (self.in_box or self.dead))) \
+            or ((map[round((self.y_coord - 18) / 32)][round((self.x_coord - 0) / 32)] == 9) and (self.in_box or self.eaten))) \
             and 0 <= self.x_coord % 32 <= 8:
               self.turns[2] = True
           elif ((map[round((self.y_coord - 18) / 32)][round((self.x_coord - 0) / 32)] == 2) \
-            or ((map[round((self.y_coord - 18) / 32)][round((self.x_coord - 0) / 32)] == 9) and (self.in_box or self.dead))) \
+            or ((map[round((self.y_coord - 18) / 32)][round((self.x_coord - 0) / 32)] == 9) and (self.in_box or self.eaten))) \
             and 0 <= self.x_coord % 32 <= 8:
               self.turns[2] = True
           elif ((map[round((self.y_coord - 18) / 32)][round((self.x_coord - 0) / 32)] == 3) \
-            or ((map[round((self.y_coord - 18) / 32)][round((self.x_coord - 0) / 32)] == 9) and (self.in_box or self.dead))) \
+            or ((map[round((self.y_coord - 18) / 32)][round((self.x_coord - 0) / 32)] == 9) and (self.in_box or self.eaten))) \
             and 0 <= self.x_coord % 32 <= 8:
               self.turns[2] = True
 
           # right
           if ((map[round((self.y_coord + 0) / 32)][round((self.x_coord + 16) / 32)] == 0) \
-            or ((map[round((self.y_coord + 0) / 32)][round((self.x_coord + 16) / 32)] == 9) and (self.in_box or self.dead))) \
+            or ((map[round((self.y_coord + 0) / 32)][round((self.x_coord + 16) / 32)] == 9) and (self.in_box or self.eaten))) \
             and 0 <= self.y_coord % 32 <= 8:
               self.turns[1] = True
           elif ((map[round((self.y_coord + 0) / 32)][round((self.x_coord + 16) / 32)] == 2) \
-            or ((map[round((self.y_coord + 0) / 32)][round((self.x_coord + 16) / 32)] == 9) and (self.in_box or self.dead))) \
+            or ((map[round((self.y_coord + 0) / 32)][round((self.x_coord + 16) / 32)] == 9) and (self.in_box or self.eaten))) \
             and 0 <= self.y_coord % 32 <= 8:
              self.turns[1] = True
           elif ((map[round((self.y_coord + 0) / 32)][round((self.x_coord + 16) / 32)] == 3) \
-            or ((map[round((self.y_coord + 0) / 32)][round((self.x_coord + 16) / 32)] == 9) and (self.in_box or self.dead))) \
+            or ((map[round((self.y_coord + 0) / 32)][round((self.x_coord + 16) / 32)] == 9) and (self.in_box or self.eaten))) \
             and 0 <= self.y_coord % 32 <= 8:
               self.turns[1] = True
 
           # left 
           if ((map[round((self.y_coord - 0) / 32)][round((self.x_coord - 18) / 32)] == 0) \
-            or ((map[round((self.y_coord - 0) / 32)][round((self.x_coord - 18) / 32)] == 9) and (self.in_box or self.dead))) \
+            or ((map[round((self.y_coord - 0) / 32)][round((self.x_coord - 18) / 32)] == 9) and (self.in_box or self.eaten))) \
             and 0 <= self.y_coord % 32 <= 8:
               self.turns[0] = True
           elif ((map[round((self.y_coord - 0) / 32)][round((self.x_coord - 18) / 32)] == 2) \
-          or ((map[round((self.y_coord - 0) / 32)][round((self.x_coord - 18) / 32)] == 9) and (self.in_box or self.dead))) \
+          or ((map[round((self.y_coord - 0) / 32)][round((self.x_coord - 18) / 32)] == 9) and (self.in_box or self.eaten))) \
           and 0 <= self.y_coord % 32 <= 8:
               self.turns[0] = True
           elif ((map[round((self.y_coord - 0) / 32)][round((self.x_coord - 18) / 32)] == 3) \
-            or ((map[round((self.y_coord - 0) / 32)][round((self.x_coord - 18) / 32)] == 9) and (self.in_box or self.dead))) \
+            or ((map[round((self.y_coord - 0) / 32)][round((self.x_coord - 18) / 32)] == 9) and (self.in_box or self.eaten))) \
             and 0 <= self.y_coord % 32 <= 8:
               self.turns[0] = True
     
         else: 
            self.turns[0] = True
            self.turns[1] = True
-
-        if 416 < self.x_coord < 448 and 256 < self.y_coord < 320:
-           self.in_box = True
-        else:
-           self.in_box = False
 
         return self.turns, self.in_box
 
@@ -465,22 +470,46 @@ def get_targets(ENEMY_1_x, ENEMY_1_y, ENEMY_2_x, ENEMY_2_y, ENEMY_3_x, ENEMY_3_y
         escape_y = 0
     return_target = (416,320)
     if powerup:
-        if not ENEMY_1_eaten:
+        if not ENEMY_1_eaten and not enemy_eaten[0]:
             ENEMY_1_TARGET = (escape_x, escape_y)
+        elif not ENEMY_1_eaten and enemy_eaten[0]:
+            if 416 < ENEMY_1_x < 448 and 256 < ENEMY_1_y < 320:
+                ENEMY_1_TARGET = (224,416)
+            else: 
+                ENEMY_1_TARGET = (foodbot_x, foodbot_y)
         else: 
             ENEMY_1_TARGET = return_target
-        if not ENEMY_2_eaten:
+
+        if not ENEMY_2_eaten and not enemy_eaten[1]:
             ENEMY_2_TARGET = (escape_x, foodbot_y)
+        elif not ENEMY_2_eaten and enemy_eaten[1]:
+            if 416 < ENEMY_2_x < 448 and 256 < ENEMY_2_y < 320:
+                ENEMY_2_TARGET = (224,416)
+            else: 
+                ENEMY_2_TARGET = (foodbot_x, foodbot_y)
         else: 
             ENEMY_2_TARGET = return_target
-        if not ENEMY_1_eaten:
+
+        if not ENEMY_3_eaten and not enemy_eaten[2]:
             ENEMY_3_TARGET = (foodbot_x, escape_y)
+        elif not ENEMY_3_eaten and enemy_eaten[2]:
+            if 416 < ENEMY_3_x < 448 and 256 < ENEMY_3_y < 320:
+                ENEMY_3_TARGET = (224,416)
+            else: 
+                ENEMY_3_TARGET = (foodbot_x, foodbot_y)
         else: 
             ENEMY_3_TARGET = return_target
-        if not ENEMY_1_eaten:
+
+        if not ENEMY_4_eaten and not enemy_eaten[3]:
             ENEMY_4_TARGET = (320, 320)
+        elif not ENEMY_4_eaten and enemy_eaten[3]:
+            if 416 < ENEMY_4_x < 448 and 256 < ENEMY_4_y < 320:
+                ENEMY_4_TARGET = (224,416)
+            else: 
+                ENEMY_4_TARGET = (foodbot_x, foodbot_y)
         else: 
             ENEMY_4_TARGET = return_target
+
     else:
         if not ENEMY_1_eaten:
             if 416 < ENEMY_1_x < 448 and 256 < ENEMY_1_y < 320:
@@ -536,27 +565,49 @@ while run:
         powerup_count = 0
         enemy_eaten = [False, False, False, False]
 
-    if start_count < 90:
+    if 0 <= start_count < 90:
         start_game = False
         start_count += 1
         ready_text = font.render(f'READY!', True, 'black')
         WINDOW.blit(ready_text, (280, 660))
-    elif start_count < 180:
+    elif 89 < start_count < 180:
         start_game = False
         start_count += 1
         ready_text = font.render(f'SET!', True, 'black')
         WINDOW.blit(ready_text, (300, 660))
-    elif start_count == 180: 
+    elif start_count == 180 and lives_left > 0 and buckeyes_collected < 177: 
         start_game = True
         go_text = font.render(f'GO!', True, 'black')
         WINDOW.blit(go_text, (300, 660))
 
+    if lives_left == 0:
+        WINDOW.blit(font.render(f'GAME OVER', True, 'black'), (300, 660))
+    
+    if buckeyes_collected == 177:
+        WINDOW.blit(font.render(f'GAME WON', True, 'black'), (300, 660))
+
+    
+    
     foodbot_display()
 
-    ENEMY_1 = Enemies(ENEMY_1_x, ENEMY_1_y, enemy_targets[0], enemy_speed, ENEMY1_IMAGE, ENEMY_1_direction, ENEMY_1_eaten, ENEMY_1_box, 0)
-    ENEMY_2 = Enemies(ENEMY_2_x, ENEMY_2_y, enemy_targets[1], enemy_speed, ENEMY2_IMAGE, ENEMY_2_direction, ENEMY_2_eaten, ENEMY_2_box, 1)
-    ENEMY_3 = Enemies(ENEMY_3_x, ENEMY_3_y, enemy_targets[2], enemy_speed, ENEMY3_IMAGE, ENEMY_3_direction, ENEMY_3_eaten, ENEMY_3_box, 2)
-    ENEMY_4 = Enemies(ENEMY_4_x, ENEMY_4_y, enemy_targets[3], enemy_speed, ENEMY4_IMAGE, ENEMY_4_direction, ENEMY_4_eaten, ENEMY_4_box, 3)
+    ENEMY_1 = Enemies(ENEMY_1_x, ENEMY_1_y, enemy_targets[0], enemy_speed[0], ENEMY1_IMAGE, ENEMY_1_direction, ENEMY_1_eaten, ENEMY_1_box, 0)
+    ENEMY_2 = Enemies(ENEMY_2_x, ENEMY_2_y, enemy_targets[1], enemy_speed[1], ENEMY2_IMAGE, ENEMY_2_direction, ENEMY_2_eaten, ENEMY_2_box, 1)
+    ENEMY_3 = Enemies(ENEMY_3_x, ENEMY_3_y, enemy_targets[2], enemy_speed[2], ENEMY3_IMAGE, ENEMY_3_direction, ENEMY_3_eaten, ENEMY_3_box, 2)
+    ENEMY_4 = Enemies(ENEMY_4_x, ENEMY_4_y, enemy_targets[3], enemy_speed[3], ENEMY4_IMAGE, ENEMY_4_direction, ENEMY_4_eaten, ENEMY_4_box, 3)
+
+    if powerup:
+        enemy_speed = [1, 1, 1, 1]
+    else: 
+        enemy_speed = [2, 2, 2, 2]
+    if ENEMY_1_eaten and not ENEMY_1.in_box:
+        enemy_speed[0] = 4
+    if ENEMY_2_eaten and not ENEMY_2.in_box:
+        enemy_speed[1] = 4
+    if ENEMY_3_eaten and not ENEMY_3.in_box:
+        enemy_speed[2] = 4
+    if ENEMY_4_eaten and not ENEMY_4.in_box:
+        enemy_speed[3] = 4
+
 
     turns = position_check()
     if start_game:
@@ -565,9 +616,160 @@ while run:
         ENEMY_2_x, ENEMY_2_y, ENEMY_2_direction = ENEMY_2.move_enemies()
         ENEMY_3_x, ENEMY_3_y, ENEMY_3_direction = ENEMY_3.move_enemies()
         ENEMY_4_x, ENEMY_4_y, ENEMY_4_direction = ENEMY_4.move_enemies()
-    score, powerup, powerup_count, enemy_eaten = score_change(score, powerup, powerup_count, enemy_eaten)
+    score, powerup, powerup_count, enemy_eaten, buckeyes_collected = score_change(score, powerup, powerup_count, enemy_eaten, buckeyes_collected)
     misc_display()
-    targets = get_targets(ENEMY_1_x, ENEMY_1_y, ENEMY_2_x, ENEMY_2_y, ENEMY_3_x, ENEMY_3_y, ENEMY_4_x, ENEMY_4_y)
+    foodbot_hitbox = pygame.draw.circle(WINDOW, 'black', ((foodbot_x + 16), (foodbot_y + 16)), 10, 2)
+    enemy_targets = get_targets(ENEMY_1_x, ENEMY_1_y, ENEMY_2_x, ENEMY_2_y, ENEMY_3_x, ENEMY_3_y, ENEMY_4_x, ENEMY_4_y)
+
+    if not powerup:
+        if (foodbot_hitbox.colliderect(ENEMY_1.rect) and not ENEMY_1.eaten) \
+            or (foodbot_hitbox.colliderect(ENEMY_2.rect) and not ENEMY_2.eaten) \
+                or (foodbot_hitbox.colliderect(ENEMY_3.rect) and not ENEMY_3.eaten) \
+                    or (foodbot_hitbox.colliderect(ENEMY_4.rect) and not ENEMY_4.eaten):
+            if lives_left > 0:
+                foodbot_x = 288
+                foodbot_y = 320
+                direction = 0
+                direction_c = 0
+                powerup = False
+                powerup_count = 0
+                lives_left -= 1
+                start_count = 0
+                ENEMY_1_x = 416
+                ENEMY_1_y = 288
+                ENEMY_1_direction = 0
+                ENEMY_2_x = 448
+                ENEMY_2_y = 288
+                ENEMY_2_direction = 0
+                ENEMY_3_x = 416
+                ENEMY_3_y = 256
+                ENEMY_3_direction = 0
+                ENEMY_4_x = 448
+                ENEMY_4_y = 256
+                ENEMY_4_direction = 0
+                enemy_eaten = [False, False, False, False]
+                ENEMY_1_eaten = False
+                ENEMY_2_eaten = False
+                ENEMY_3_eaten = False
+                ENEMY_4_eaten = False
+  
+    if powerup and foodbot_hitbox.colliderect(ENEMY_1.rect) and enemy_eaten[0] and not ENEMY_1.eaten:
+        if lives_left > 0:
+                ENEMY_1_x = 416
+                ENEMY_1_y = 288
+                ENEMY_1_direction = 0
+                ENEMY_2_x = 448
+                ENEMY_2_y = 288
+                ENEMY_2_direction = 0
+                ENEMY_3_x = 416
+                ENEMY_3_y = 256
+                ENEMY_3_direction = 0
+                ENEMY_4_x = 448
+                ENEMY_4_y = 256
+                ENEMY_4_direction = 0
+                enemy_eaten = [False, False, False, False]
+                ENEMY_1_eaten = False
+                ENEMY_2_eaten = False
+                ENEMY_3_eaten = False
+                ENEMY_4_eaten = False
+    if powerup and foodbot_hitbox.colliderect(ENEMY_2.rect) and enemy_eaten[1] and not ENEMY_2.eaten:
+        if lives_left > 0:
+                foodbot_x = 288
+                foodbot_y = 320
+                direction = 0
+                direction_c = 0
+                powerup = False
+                powerup_count = 0
+                lives_left -= 1
+                start_count = 0
+                ENEMY_1_x = 416
+                ENEMY_1_y = 288
+                ENEMY_1_direction = 0
+                ENEMY_2_x = 448
+                ENEMY_2_y = 288
+                ENEMY_2_direction = 0
+                ENEMY_3_x = 416
+                ENEMY_3_y = 256
+                ENEMY_3_direction = 0
+                ENEMY_4_x = 448
+                ENEMY_4_y = 256
+                ENEMY_4_direction = 0
+                enemy_eaten = [False, False, False, False]
+                ENEMY_1_eaten = False
+                ENEMY_2_eaten = False
+                ENEMY_3_eaten = False
+                ENEMY_4_eaten = False
+    if powerup and foodbot_hitbox.colliderect(ENEMY_3.rect) and enemy_eaten[2] and not ENEMY_3.eaten:
+        if lives_left > 0:
+                foodbot_x = 288
+                foodbot_y = 320
+                direction = 0
+                direction_c = 0
+                powerup = False
+                powerup_count = 0
+                lives_left -= 1
+                start_count = 0
+                ENEMY_1_x = 416
+                ENEMY_1_y = 288
+                ENEMY_1_direction = 0
+                ENEMY_2_x = 448
+                ENEMY_2_y = 288
+                ENEMY_2_direction = 0
+                ENEMY_3_x = 416
+                ENEMY_3_y = 256
+                ENEMY_3_direction = 0
+                ENEMY_4_x = 448
+                ENEMY_4_y = 256
+                ENEMY_4_direction = 0
+                enemy_eaten = [False, False, False, False]
+                ENEMY_1_eaten = False
+                ENEMY_2_eaten = False
+                ENEMY_3_eaten = False
+                ENEMY_4_eaten = False
+    if powerup and foodbot_hitbox.colliderect(ENEMY_4.rect) and enemy_eaten[3] and not ENEMY_4.eaten:
+        if lives_left > 0:
+                foodbot_x = 288
+                foodbot_y = 320
+                direction = 0
+                direction_c = 0
+                powerup = False
+                powerup_count = 0
+                lives_left -= 1
+                start_count = 0
+                ENEMY_1_x = 416
+                ENEMY_1_y = 288
+                ENEMY_1_direction = 0
+                ENEMY_2_x = 448
+                ENEMY_2_y = 288
+                ENEMY_2_direction = 0
+                ENEMY_3_x = 416
+                ENEMY_3_y = 256
+                ENEMY_3_direction = 0
+                ENEMY_4_x = 448
+                ENEMY_4_y = 256
+                ENEMY_4_direction = 0
+                enemy_eaten = [False, False, False, False]
+                ENEMY_1_eaten = False
+                ENEMY_2_eaten = False
+                ENEMY_3_eaten = False
+                ENEMY_4_eaten = False
+
+    if powerup and foodbot_hitbox.colliderect(ENEMY_1.rect) and not ENEMY_1.eaten and not enemy_eaten[0]:
+        ENEMY_1_eaten = True
+        enemy_eaten[0] = True
+        score += 200
+    if powerup and foodbot_hitbox.colliderect(ENEMY_2.rect) and not ENEMY_2.eaten and not enemy_eaten[1]:
+        ENEMY_2_eaten = True
+        enemy_eaten[1] = True
+        score += 200
+    if powerup and foodbot_hitbox.colliderect(ENEMY_3.rect) and not ENEMY_3.eaten and not enemy_eaten[2]:
+        ENEMY_3_eaten = True
+        enemy_eaten[2] = True
+        score += 200
+    if powerup and foodbot_hitbox.colliderect(ENEMY_4.rect) and not ENEMY_4.eaten and not enemy_eaten[3]:
+        ENEMY_4_eaten = True
+        enemy_eaten[3] = True
+        score += 200
 
     for event in pygame.event.get():
         # quit game if user exits window
@@ -605,18 +807,15 @@ while run:
             foodbot_x = 600
             direction = 0
 
-        #print("x: ")
-        #print(foodbot_x)
-        #print("y: ")
-        #print(foodbot_y)
+        if ENEMY_1.in_box and ENEMY_1_eaten:
+            ENEMY_1_eaten = False
+        elif ENEMY_2.in_box and ENEMY_2_eaten:
+            ENEMY_2_eaten = False
+        elif ENEMY_3.in_box and ENEMY_3_eaten:
+            ENEMY_2_eaten = False
+        elif ENEMY_4.in_box and ENEMY_4_eaten:
+            ENEMY_4_eaten = False
 
-   
     pygame.display.update()
-        
 
 pygame.quit()
-
-# only run this game if this file is ran
-#if __name__ == "__main__":
-    #main()
-    #print("main")
