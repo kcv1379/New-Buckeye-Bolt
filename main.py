@@ -581,9 +581,15 @@ while run:
         WINDOW.blit(go_text, (300, 660))
 
     if lives_left == 0:
+        start_count = -999
+        start_game = False
+        start_count -= 1
         WINDOW.blit(font.render(f'GAME OVER', True, 'black'), (300, 660))
     
     if buckeyes_collected == 177:
+        start_count = -999
+        start_game = False
+        start_count -= 1
         WINDOW.blit(font.render(f'GAME WON', True, 'black'), (300, 660))
 
     
@@ -618,7 +624,7 @@ while run:
         ENEMY_4_x, ENEMY_4_y, ENEMY_4_direction = ENEMY_4.move_enemies()
     score, powerup, powerup_count, enemy_eaten, buckeyes_collected = score_change(score, powerup, powerup_count, enemy_eaten, buckeyes_collected)
     misc_display()
-    foodbot_hitbox = pygame.draw.circle(WINDOW, 'black', ((foodbot_x + 16), (foodbot_y + 16)), 10, 2)
+    foodbot_hitbox = pygame.draw.circle(WINDOW, 'white', ((foodbot_x + 16), (foodbot_y + 14)), 1, 1)
     enemy_targets = get_targets(ENEMY_1_x, ENEMY_1_y, ENEMY_2_x, ENEMY_2_y, ENEMY_3_x, ENEMY_3_y, ENEMY_4_x, ENEMY_4_y)
 
     if not powerup:
